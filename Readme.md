@@ -9,12 +9,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/opensaucerer/wormhole/spacetime"
+	"github.com/opensaucerer/wormhole/horizon"
 )
 
 func main() {
 
-	f := spacetime.NewFuture()
+	f := horizon.NewFuture()
 	f.RegisterComplete(func(data interface{}) {
 		fmt.Println("Received data from future --> ", data.(string))
 	})
@@ -46,8 +46,8 @@ Received data from future -->  completed after 4 seconds
 ## TODO
 
 - [x] basic Futures implementation
-- [ ] handle error in Futures
-- [ ] `signalFinally` in Futures (called immediately after SignalComplete or SignalError)
-- [ ] `SingalError` in Futures
+- [x] handle error in Futures
+- [x] `signalFinally` in Futures (called immediately after SignalComplete or SignalError)
+- [x] `SingalError` in Futures
 
 > come in and let's hack!
