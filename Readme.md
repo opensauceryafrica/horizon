@@ -74,9 +74,36 @@ func main() {
 #### result
 
 ```shell
-Received data from future -->  another hello world
-Received data from future -->  completed after 2 seconds
-Received data from future -->  completed after 4 seconds
+2023/04/23 03:22:17 Received data from future -->   hello world: 9
+2023/04/23 03:22:17 Received data from future -->   hello world: 8
+2023/04/23 03:22:17 Received data from future -->   hello world: 1
+2023/04/23 03:22:17 Received data from future -->   hello world: 5
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Received data from future -->   hello world: 6
+2023/04/23 03:22:17 Received data from future -->   hello world: 0
+2023/04/23 03:22:17 Received data from future -->   hello world: 3
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Received data from future -->   hello world: 7
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Received data from future -->   hello world: 4
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Received data from future -->   hello world: 2
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:17 Future is complete
+2023/04/23 03:22:19 Received data from future -->  completed after 2 seconds
+2023/04/23 03:22:19 Future is complete
+2023/04/23 03:22:21 Received data from future -->  completed after 4 seconds
+2023/04/23 03:22:21 Future is complete
+2023/04/23 03:22:27 [{complete  hello world: 9} {complete  hello world: 8} {complete  hello world: 1} {complete  hello world: 5} {complete  hello world: 6} {complete  hello world: 0} {complete  hello world: 3} {complete  hello world: 7} {complete  hello world: 4} {complete  hello world: 2} {complete completed after 2 seconds} {complete completed after 4 seconds}] 12
+2023/04/23 03:22:27 []
+2023/04/23 03:22:27 Received data from future -->  hello world
+2023/04/23 03:22:27 Future is complete
+2023/04/23 03:22:32 [{complete hello world}]
+2023/04/23 03:22:37 future is destroyed
 ```
 
 ## TODO
