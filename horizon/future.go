@@ -27,8 +27,12 @@ type Future struct {
 }
 
 // NewFuture creates a new future
-func NewFuture(mode Mode) *Future {
-	f := &Future{eventChan: make(chan Event), events: make([]Event, 0), quitChan: make(chan struct{})}
+func NewFuture(mode ...Mode) *Future {
+	m := Einstein
+	if len(mode) != 0 {
+		m = mode[0]
+	}
+	f := &Future{eventChan: make(chan Event), events: make([]Event, 0), quitChan: make(chan struct{}), Mode: m}
 	f.Signal()
 	return f
 }
