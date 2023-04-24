@@ -165,12 +165,6 @@ func (f *Future) signalFinally() {
 
 			f.onFinFunc()
 		}()
-	} else {
-		if f.Mode == Hawking {
-			panic("no function registered for future event [SignalFinally]")
-		}
-		log.Println("no function registered for future event [SignalFinally]")
-		return
 	}
 }
 
