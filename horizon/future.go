@@ -21,6 +21,8 @@ type Future struct {
 
 	signalCount int // could be useful
 
+	radius Radius // below the schwarzschild radius, the horizon blocks forever
+
 	// we have horizon.Einstein and horizon.Hawking
 	// the mode defines whether or not the future should panic
 	Mode Mode

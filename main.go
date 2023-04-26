@@ -17,6 +17,10 @@ func main() {
 
 		// an error in this future handler with send a trigger to the future error handler
 		// panic("We should not be here")
+
+		if data.(string) == "completed after 4 seconds" {
+			horizon.Openheimer(f)
+		}
 	})
 
 	// f.RegisterError(func(data interface{}) {
@@ -43,24 +47,26 @@ func main() {
 		f.SignalComplete(" hello world: " + fmt.Sprintf("%d", i))
 	}
 
-	<-time.After(10 * time.Second)
-	log.Println(f.Events(), f.SigalCount())
+	horizon.Schwarzschild(f)
 
-	f.Alter()
+	// <-time.After(10 * time.Second)
+	// log.Println(f.Events(), f.SigalCount())
 
-	log.Println(f.Events())
+	// f.Alter()
 
-	f.SignalComplete("hello world")
+	// log.Println(f.Events())
 
-	time.Sleep(5 * time.Second)
+	// f.SignalComplete("hello world")
 
-	log.Println(f.Events())
+	// time.Sleep(5 * time.Second)
 
-	f.BlackHole()
+	// log.Println(f.Events())
 
-	time.Sleep(5 * time.Second)
+	// f.BlackHole()
 
-	f.SignalComplete("future destroyed")
+	// time.Sleep(5 * time.Second)
 
-	time.Sleep(5 * time.Second)
+	// f.SignalComplete("future destroyed")
+
+	// time.Sleep(5 * time.Second)
 }
