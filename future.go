@@ -25,7 +25,7 @@ type Future struct {
 
 	// we have horizon.Einstein and horizon.Hawking
 	// the mode defines whether or not the future should panic
-	Mode Mode
+	mode Mode
 }
 
 // NewFuture creates a new future
@@ -34,8 +34,8 @@ func NewFuture(mode ...Mode) *Future {
 	if len(mode) != 0 {
 		m = mode[0]
 	}
-	f := &Future{eventChan: make(chan Event), events: make([]Event, 0), quitChan: make(chan struct{}), Mode: m}
-	f.Signal()
+	f := &Future{eventChan: make(chan Event), events: make([]Event, 0), quitChan: make(chan struct{}), mode: m}
+	f.signal()
 	return f
 }
 
@@ -46,7 +46,7 @@ func (f *Future) Events() []Event {
 
 // Set passes the value received from the event that occured in the future
 // into the event channel
-func (f *Future) Set(e Event) {
+func (f *Future) set(e Event) {
 	f.eventChan <- e
 }
 
@@ -65,8 +65,8 @@ func (f *Future) RegisterFinally(futureFunc func()) {
 	f.onFinFunc = futureFunc
 }
 
-// Signal opens the horizon and allows the future to send events to the present
-func (f *Future) Signal() {
+// signal opens the horizon and allows the future to send events to the present
+func (f *Future) signal() {
 	go func() {
 	Loop:
 		for {
@@ -90,7 +90,7 @@ func (f *Future) Signal() {
 // that the event has completed
 func (f *Future) SignalComplete(value interface{}) {
 	if f.isNil() {
-		if f.Mode == Hawking {
+		if f.mode == Hawking {
 			panic("future is destroyed")
 		}
 		log.Println("future is destroyed")
@@ -104,10 +104,10 @@ func (f *Future) SignalComplete(value interface{}) {
 
 			f.onComFunc(value)
 			// handle error here -- only if user register a function for a future error event
-			f.Set(Event{Type: Complete, Data: value})
+			f.set(Event{Type: Complete, Data: value})
 		}()
 	} else {
-		if f.Mode == Hawking {
+		if f.mode == Hawking {
 			panic("no function registered for future event [SignalComplete]")
 		}
 		log.Println("no function registered for future event [SignalComplete]")
@@ -119,7 +119,7 @@ func (f *Future) SignalComplete(value interface{}) {
 // that the event has encountered an error
 func (f *Future) SignalError(value interface{}) {
 	if f.isNil() {
-		if f.Mode == Hawking {
+		if f.mode == Hawking {
 			panic("future is destroyed")
 		}
 		log.Println("future is destroyed")
@@ -134,13 +134,13 @@ func (f *Future) SignalError(value interface{}) {
 
 			f.onErrFunc(value)
 			// handle error here -- only if user register a function for a future error event
-			f.Set(Event{Type: Error, Data: value})
+			f.set(Event{Type: Error, Data: value})
 
 			// signal finally
 			f.signalFinally()
 		}()
 	} else {
-		if f.Mode == Hawking {
+		if f.mode == Hawking {
 			panic("no function registered for future event [SignalError]")
 		}
 		log.Println("no function registered for future event [SignalError]")
@@ -148,11 +148,11 @@ func (f *Future) SignalError(value interface{}) {
 	}
 }
 
-// SignalFinally sends a signal to the future
+// signalFinally sends a signal to the future
 // that the event has completed or encountered an error
 func (f *Future) signalFinally() {
 	if f.isNil() {
-		if f.Mode == Hawking {
+		if f.mode == Hawking {
 			panic("future is destroyed")
 		}
 		log.Println("future is destroyed")
@@ -171,10 +171,10 @@ func (f *Future) signalFinally() {
 }
 
 /*
-SigalCount returns the number of signals sent to the future this is useful for debugging
+SignalCount returns the number of signals sent to the future this is useful for debugging
 
 note: it only accounts for the current timeline and has no knowledge of branched timelines created by f.Alter() **/
-func (f *Future) SigalCount() int {
+func (f *Future) SignalCount() int {
 	return f.signalCount
 }
 
@@ -195,7 +195,7 @@ func (f *Future) BlackHole() {
 	close(f.quitChan)
 	// keep the mode to allow for error handling
 	// when accessing a black holed future
-	*f = Future{Mode: f.Mode}
+	*f = Future{mode: f.mode}
 }
 
 // isNil checks if the future is nil

@@ -11,7 +11,7 @@ var SchwarzschildRadius Radius = Radius{0, 0, 0}
 var EinsteinRadius Radius = Radius{1, 1, 1}
 
 // Schwarzschild creates a warps in the horizon such that the runtime blocks
-// until signal off. This signal off simply changes the coordinate away from
+// until signaled off. This signal off simply changes the coordinate away from
 // the schwarzschild radius.
 func Schwarzschild(future *Future) {
 	if !future.isNil() {
