@@ -2,6 +2,8 @@
 
 Horizon creates a boundary beyond which events can no longer affect the observer, however, as it is with time, the order of events isn't always linear.
 
+The idea is simple...let a future event signal a past function to cause an effect in the present.
+
 ## Why Horizon?
 
 Goroutines are arguably a transgenerational piece of programming art, but they can be quite difficult to manage. Of course, you have channels but it's impossible to deny that you haven't caused the runtime to block by reading from an unbuffered channel or even a situation that's worse, a deadlock.
