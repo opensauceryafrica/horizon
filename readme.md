@@ -93,7 +93,7 @@ func main() {
 		}(mail)
 	}
 
-	// block the main routine
+	// block the main routine (this will not be needed in a server)
 	horizon.Schwarzschild(future)
 }
 ```
