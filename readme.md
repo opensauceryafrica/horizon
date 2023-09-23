@@ -18,6 +18,13 @@ go get github.com/opensaucerer/horizon
 
 ## Usage
 
+You can use horizon to manage goroutines and their events in a way that makes it much flexible for the most common use cases. Some possible use cases are:
+
+- Sending emails to users with retries and retry timeout
+- Downloading multiple files simultaneously from a remote server
+- Sending multiple requests to a remote server simultaneously
+- etc.
+
 ### Sending emails to users with retries and retry timeout
 
 ```go
@@ -32,46 +39,62 @@ import (
 
 func main() {
 
+	// here we are keeping a count of sent and failed mails
 	var sent, failed int
-	retrial := make(map[string]int)
+	retrial := make(map[string]int) // this is used to keep track of the number of times a mail has been retried
 
+	// create a new future and set it to Einstein mode to ensure that it doesn't panic
 	future := horizon.NewFuture(horizon.Einstein)
 
+	// register a future handler for when the future is signaled to as complete from any goroutine (timeline)
 	future.RegisterComplete(func(data interface{}) {
+
+		// assert the data to the type we expect it to be as signaled from the future (goroutine timeline)
 		mail := data.(service.Email)
 
 		log.Printf("EmailNotification: notification for %s successfully sent to %s", mail.MessageKey, mail.To)
 
+		// increment the sent count
 		sent++
 
+		// check if all mails have been sent
 		if sent+failed == len(recipients) {
 			log.Printf("EmailNotification: %d notifications sent, %d failed", sent, failed)
 
-			// unblock the goroutine that called this function
+			// unblock the goroutine that called this function (when used in a server, you won't need this)
 			horizon.Openheimer(future)
 		}
 	})
 
+	// register a future handler for when the future is signaled to as error from any goroutine (timeline)
 	future.RegisterError(func(data interface{}) {
+
+		// assert the data to the type we expect it to be as signaled from the future (goroutine timeline)
 		mail := data.(service.Email)
 
 		log.Printf("EmailNotification: notification for %s failed to send to %s --- Retrying", mail.MessageKey, mail.To)
 
+		// check if the mail has been retried more than twice
 		if retrial[mail.To] > 2 {
+			// increment the failed count
 			failed++
 		} else {
+			// if not, retry in another gorouting (timeline) after 5 seconds and increment the retry count
 			retrial[mail.To]++
 			go func(m service.Email) {
 				time.Sleep(5 * time.Second)
 				err := service.SendEmailForNotification(m.To, m.MessageKey, m.Replacements)
 				if err != nil {
+					// signal the future as error if the mail failed to send
 					future.SignalError(m)
 				} else {
+					// signal the future as complete if the mail was sent successfully
 					future.SignalComplete(m)
 				}
 			}(mail)
 		}
 
+		// check if all mails have been sent
 		if sent+failed == len(recipients) {
 
 			log.Printf("EmailNotification: %d notifications sent, %d failed", sent, failed)
@@ -81,19 +104,22 @@ func main() {
 		}
 	})
 
+	// for each recipient, wait 5 seconds and send an email in a goroutine (timeline)
 	for _, mail := range recipients {
 		go func(m service.Email) {
 			time.Sleep(5 * time.Second)
 			err := service.SendEmailForNotification(m.To, m.MessageKey, m.Replacements)
 			if err != nil {
+				// signal the future as error if the mail failed to send
 				future.SignalError(m)
 			} else {
+				// signal the future as complete if the mail was sent successfully
 				future.SignalComplete(m)
 			}
 		}(mail)
 	}
 
-	// block the main routine (this will not be needed in a server)
+	// block the main routine (when used in a server, you won't need this because a server is already a blocking routine)
 	horizon.Schwarzschild(future)
 }
 ```
