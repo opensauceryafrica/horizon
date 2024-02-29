@@ -13,7 +13,7 @@ Rather than having to deal with the complexity of channels, Horizon provides a s
 ## Installation
 
 ```shell
-go get github.com/opensaucerer/horizon
+go get github.com/opensauceryafrica/horizon
 ```
 
 ## Usage
@@ -34,7 +34,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/opensaucerer/wormhole/horizon"
+	"github.com/opensauceryafrica/wormhole/horizon"
 )
 
 func main() {
